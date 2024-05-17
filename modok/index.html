@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MODOK League Pool Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #heroesList {
+            margin-bottom: 20px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>MODOK League Pool Builder</h1>
+    <div id="heroesList"></div>
+    <input type="text" id="numberInput" placeholder="Number of teams">
+    <button id="goButton">Go</button>
+    <div id="result"></div>
 
+    <script>
+        // List of possible Marvel heroes
+        const marvelHeroes = [
+            'Spider-Man', 'Captain Marvel', 'She-Hulk', 'Iron Man', 'Black Panther', 
+             'Captain America', 'Ms Marvel', 'Thor', 'Black Widow', 'Doctor Strange', 
+             'Hulk', 'Hawkeye', 'Ant-Man', 'Wasp', 'Quicksilver', 
+             'Scarlet Witch', 'Groot', 'Rocket', 'Star-Lord' ,'Gamora', 'Drax', 
+             'Venom', 'Spectrum', 'Nebula', 'War Machine', 
+             'Valkyrie', 'Vision', 'Ghost Spider', 'Spider-Miles', 'Nova', 
+             'Ironheart', 'Spider-Ham', 'SP//dr', 'Colossus', 'Shadowcat', 'Cyclops', 
+             'Phoenix', 'Wolverine', 'Storm', 'Gambit', 'Rogue', 'Cable', 'Domino', 
+             'Angel', 'Psylocke', 'X-23', 'Deadpool', 'Bishop', 'Magik', 'Iceman'
+        ];
+
+        // List of aspect choices
+        const aspectChoices = ['Aggression', 'Justice', 'Leadership', 'Protection', 'Pool'];
+
+        // Sort the list of heroes alphabetically
+        marvelHeroes.sort();
+
+        // Display the list of possible heroes
+        const heroesListDiv = document.getElementById('heroesList');
+        heroesListDiv.innerHTML = '<strong>Possible Heroes:</strong> ' + marvelHeroes.join(', ');
+
+        document.getElementById('goButton').addEventListener('click', function() {
+            // Get the value from the input box
+            const numberOfTeams = parseInt(document.getElementById('numberInput').value);
+
+            // Validate input
+            if (isNaN(numberOfTeams) || numberOfTeams <= 0) {
+                document.getElementById('result').innerText = 'Please enter a valid number of teams.';
+                return;
+            }
+
+            // Calculate the number of heroes required
+            const numberOfHeroes = 2 * numberOfTeams + 4;
+
+            // Validate the number of heroes does not exceed the list size
+            if (numberOfHeroes > marvelHeroes.length) {
+                document.getElementById('result').innerText = 'Not enough heroes available for the given number of teams. Please enter a smaller number of teams.';
+                return;
+            }
+
+            // Calculate the number of aspects required
+            const numberOfAspects = 2 * numberOfTeams + 2;
+
+            // Calculate aspect overflow
+            const aspectOverflow = numberOfAspects - Math.floor(numberOfAspects / 5) * 5;
+
+            // Calculate the number of copies of each aspect
+            const copiesOfEachAspect = Math.floor(numberOfAspects / 5);
+
+            // Generate aspect duplicates
+            const aspectDuplicates = [];
+            for (let i = 0; i < copiesOfEachAspect; i++) {
+                aspectChoices.forEach(aspect => {
+                    aspectDuplicates.push(aspect);
+                });
+            }
+
+            // Generate aspect choices
+            const shuffledAspects = aspectChoices.sort(() => 0.5 - Math.random());
+            const selectedAspects = shuffledAspects.slice(0, aspectOverflow);
+
+            // Generate a random unique list of Marvel heroes
+            const shuffledHeroes = marvelHeroes.sort(() => 0.5 - Math.random());
+            const selectedHeroes = shuffledHeroes.slice(0, numberOfHeroes);
+
+            // Combine selectedHeroes and selectedAspects to create draftBot
+            let draftBot = selectedHeroes.concat(selectedAspects, aspectDuplicates);
+
+            // Shuffle the draftBot list
+            for (let i = draftBot.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [draftBot[i], draftBot[j]] = [draftBot[j], draftBot[i]];
+            }
+
+            // Display the result
+            document.getElementById('result').innerHTML = `<strong>Hero draft pool:</strong> ${selectedHeroes.join(', ')}<br><br><strong>Copies of each aspect:</strong> ${copiesOfEachAspect}<br><strong>Extra copies of:</strong> ${selectedAspects.join(', ')}<br><br><strong>Draft Bot:</strong><br>${draftBot.join(', ')}`;
+        });
+    </script>
+</body>
+</html>

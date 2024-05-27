@@ -20,7 +20,7 @@
 <body>
     <h1>MODOK League Pool Builder</h1>
     <div id="heroesList"></div>
-    <input type="text" id="numberInput" placeholder="Number of teams">
+    <div id="numberOfTeams"></div>
     <button id="goButton">Go</button>
     <div id="result"></div>
 
@@ -41,6 +41,19 @@
         // List of aspect choices
         const aspectChoices = ['Aggression', 'Justice', 'Leadership', 'Protection', 'Pool'];
 
+        // List of teams
+        const teams = [
+            "MrSelfDestruct and em", "Teberle and Kamehameha", "TordekRPG - 2-handed", 
+            "tjjj and jarratt", "Astrodar and josseroo", "Dristin - 2-handed", 
+            "Kakita Jamie and The Ugly Knight"
+        ];
+
+        // Count the number of teams
+        const numberOfTeams = teams.length;
+
+        // Display the number of teams
+        document.getElementById('numberOfTeams').innerText = `Number of teams: ${numberOfTeams}`;
+
         // Sort the list of heroes alphabetically
         marvelHeroes.sort();
 
@@ -49,21 +62,12 @@
         heroesListDiv.innerHTML = '<strong>Possible Heroes:</strong> ' + marvelHeroes.join(', ');
 
         document.getElementById('goButton').addEventListener('click', function() {
-            // Get the value from the input box
-            const numberOfTeams = parseInt(document.getElementById('numberInput').value);
-
-            // Validate input
-            if (isNaN(numberOfTeams) || numberOfTeams <= 0) {
-                document.getElementById('result').innerText = 'Please enter a valid number of teams.';
-                return;
-            }
-
             // Calculate the number of heroes required
             const numberOfHeroes = 2 * numberOfTeams + 4;
 
             // Validate the number of heroes does not exceed the list size
             if (numberOfHeroes > marvelHeroes.length) {
-                document.getElementById('result').innerText = 'Not enough heroes available for the given number of teams. Please enter a smaller number of teams.';
+                document.getElementById('result').innerText = 'Not enough heroes available for the given number of teams.';
                 return;
             }
 
@@ -101,8 +105,11 @@
                 [draftBot[i], draftBot[j]] = [draftBot[j], draftBot[i]];
             }
 
+            // Shuffle the teams list
+            const shuffledTeams = teams.sort(() => 0.5 - Math.random());
+
             // Display the result
-            document.getElementById('result').innerHTML = `<strong>Hero draft pool:</strong> ${selectedHeroes.join(', ')}<br><br><strong>Copies of each aspect:</strong> ${copiesOfEachAspect}<br><strong>Extra copies of:</strong> ${selectedAspects.join(', ')}<br><br><strong>Draft Bot:</strong><br>${draftBot.join(', ')}`;
+            document.getElementById('result').innerHTML = `<strong>Hero draft pool:</strong> ${selectedHeroes.join(', ')}<br><br><strong>Copies of each aspect:</strong> ${copiesOfEachAspect}<br><strong>Extra copies of:</strong> ${selectedAspects.join(', ')}<br><br><strong>Draft-bot:</strong><br>${draftBot.join(', ')}<br><br><strong>Draft order:</strong><br>${shuffledTeams.join('<br>')}`;
         });
     </script>
 </body>

@@ -20,7 +20,10 @@
 <body>
     <h1>MODOK League Pool Builder</h1>
     <div id="heroesList"></div>
-    <div id="numberOfTeams"></div>
+    <div><strong>Number of teams:</strong> <span id="numberOfTeams"></span></div>
+    <br>
+    <label for="seedInput"><strong>Enter seed (optional):</strong></label>
+    <input type="text" id="seedInput">
     <button id="goButton">Go</button>
     <div id="result"></div>
 
@@ -28,14 +31,14 @@
         // List of possible Marvel heroes
         const marvelHeroes = [
             'Spider-Man', 'Captain Marvel', 'She-Hulk', 'Iron Man', 'Black Panther', 
-             'Captain America', 'Ms Marvel', 'Thor', 'Black Widow', 'Doctor Strange', 
-             'Hulk', 'Hawkeye', 'Ant-Man', 'Wasp', 'Quicksilver', 
-             'Scarlet Witch', 'Groot', 'Rocket', 'Star-Lord' ,'Gamora', 'Drax', 
-             'Venom', 'Spectrum', 'Nebula', 'War Machine', 
-             'Valkyrie', 'Vision', 'Ghost Spider', 'Spider-Miles', 'Nova', 
-             'Ironheart', 'Spider-Ham', 'SP//dr', 'Colossus', 'Shadowcat', 'Cyclops', 
-             'Phoenix', 'Wolverine', 'Storm', 'Gambit', 'Rogue', 'Cable', 'Domino', 
-             'Angel', 'Psylocke', 'X-23', 'Deadpool', 'Bishop', 'Magik', 'Iceman'
+            'Captain America', 'Ms Marvel', 'Thor', 'Black Widow', 'Doctor Strange', 
+            'Hulk', 'Hawkeye', 'Ant-Man', 'Wasp', 'Quicksilver', 
+            'Scarlet Witch', 'Groot', 'Rocket', 'Star-Lord' ,'Gamora', 'Drax', 
+            'Venom', 'Spectrum', 'Nebula', 'War Machine', 
+            'Valkyrie', 'Vision', 'Ghost Spider', 'Spider-Miles', 'Nova', 
+            'Ironheart', 'Spider-Ham', 'SP//dr', 'Colossus', 'Shadowcat', 'Cyclops', 
+            'Phoenix', 'Wolverine', 'Storm', 'Gambit', 'Rogue', 'Cable', 'Domino', 
+            'Angel', 'Psylocke', 'X-23', 'Deadpool', 'Bishop', 'Magik', 'Iceman'
         ];
 
         // List of aspect choices
@@ -52,7 +55,7 @@
         const numberOfTeams = teams.length;
 
         // Display the number of teams
-        document.getElementById('numberOfTeams').innerText = `Number of teams: ${numberOfTeams}`;
+        document.getElementById('numberOfTeams').innerText = numberOfTeams;
 
         // Sort the list of heroes alphabetically
         marvelHeroes.sort();
@@ -61,7 +64,30 @@
         const heroesListDiv = document.getElementById('heroesList');
         heroesListDiv.innerHTML = '<strong>Possible Heroes:</strong> ' + marvelHeroes.join(', ');
 
+        function seededRandom(seed) {
+            let m = 2**32 - 1;
+            let a = 1664525;
+            let c = 1013904223;
+            let state = seed ? seed : Math.floor(Math.random() * m);
+
+            return function() {
+                state = (a * state + c) % m;
+                return state / m;
+            };
+        }
+
+        function shuffleArray(array, randomFunc) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(randomFunc() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
         document.getElementById('goButton').addEventListener('click', function() {
+            const seedInput = document.getElementById('seedInput').value;
+            const seed = seedInput ? parseInt(seedInput) : null;
+            const randomFunc = seededRandom(seed);
+
             // Calculate the number of heroes required
             const numberOfHeroes = 2 * numberOfTeams + 4;
 
@@ -88,25 +114,25 @@
                 });
             }
 
-            // Generate aspect choices
-            const shuffledAspects = aspectChoices.sort(() => 0.5 - Math.random());
+            // Shuffle aspect choices
+            const shuffledAspects = [...aspectChoices];
+            shuffleArray(shuffledAspects, randomFunc);
             const selectedAspects = shuffledAspects.slice(0, aspectOverflow);
 
-            // Generate a random unique list of Marvel heroes
-            const shuffledHeroes = marvelHeroes.sort(() => 0.5 - Math.random());
+            // Shuffle heroes
+            const shuffledHeroes = [...marvelHeroes];
+            shuffleArray(shuffledHeroes, randomFunc);
             const selectedHeroes = shuffledHeroes.slice(0, numberOfHeroes);
 
             // Combine selectedHeroes and selectedAspects to create draftBot
             let draftBot = selectedHeroes.concat(selectedAspects, aspectDuplicates);
 
             // Shuffle the draftBot list
-            for (let i = draftBot.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [draftBot[i], draftBot[j]] = [draftBot[j], draftBot[i]];
-            }
+            shuffleArray(draftBot, randomFunc);
 
             // Shuffle the teams list
-            const shuffledTeams = teams.sort(() => 0.5 - Math.random());
+            const shuffledTeams = [...teams];
+            shuffleArray(shuffledTeams, randomFunc);
 
             // Display the result
             document.getElementById('result').innerHTML = `<strong>Hero draft pool:</strong> ${selectedHeroes.join(', ')}<br><br><strong>Copies of each aspect:</strong> ${copiesOfEachAspect}<br><strong>Extra copies of:</strong> ${selectedAspects.join(', ')}<br><br><strong>Draft-bot:</strong><br>${draftBot.join(', ')}<br><br><strong>Draft order:</strong><br>${shuffledTeams.join('<br>')}`;

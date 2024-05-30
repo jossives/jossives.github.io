@@ -49,7 +49,7 @@
             "MrSelfDestruct and em", "Teberle and Kamehameha", "TordekRPG - 2-handed", 
             "tjjj and jarratt", "Astrodar and josseroo", "Dristin - 2-handed", 
             "Kakita Jamie and The Ugly Knight", "Lexicon - 2-handed",
-            "PackAttackCB", "Dr00"
+            "PackAttackCB and captainmarvel9", "Dr00"
         ];
 
         // Count the number of teams
@@ -124,6 +124,9 @@
             const shuffledHeroes = [...marvelHeroes];
             shuffleArray(shuffledHeroes, randomFunc);
             const selectedHeroes = shuffledHeroes.slice(0, numberOfHeroes);
+
+            // Sort the selected heroes alphabetically
+            selectedHeroes.sort();
 
             // Combine selectedHeroes and selectedAspects to create draftBot
             let draftBot = selectedHeroes.concat(selectedAspects, aspectDuplicates);

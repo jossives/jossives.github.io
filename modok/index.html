@@ -29,27 +29,58 @@
 
     <script>
         // List of possible Marvel heroes
+        //const marvelHeroes = [
+        //    'Angel', 'Ant-Man', 'Bishop', 'Black Panther', 'Black Widow', 
+        //    'Cable', 'Captain America', 'Captain Marvel', 'Colossus', 
+        //    'Cyclops', 'Deadpool', 'Doctor Strange', 'Domino', 'Drax', 
+        //    'Gambit', 'Gamora', 'Ghost Spider', 'Groot', 'Hawkeye', 
+        //    'Hulk', 'Iceman', 'Iron Man', 'Ironheart', 'Jubilee', 
+        //    'Magik', 'Ms Marvel', 'Nebula', 'Nova', 'Phoenix', 
+        //    'Psylocke', 'Quicksilver', 'Rocket', 'Rogue', 'SP//dr', 
+        //    'Scarlet Witch', 'Shadowcat', 'She-Hulk', 'Spectrum', 'Spider-Ham', 
+        //    'Spider-Man (Peter Parker)', 'Spider-Miles (Miles Morales)', 
+        //    'Star-Lord', 'Storm', 'Thor', 
+        //    'Valkyrie', 'Venom', 'Vision', 'War Machine', 'Wasp', 
+        //    'Wolverine', 'X-23'
+        //];
+
+        // B-league
         const marvelHeroes = [
-            'Spider-Man', 'Captain Marvel', 'She-Hulk', 'Iron Man', 'Black Panther', 
-            'Captain America', 'Ms Marvel', 'Thor', 'Black Widow', 'Doctor Strange', 
-            'Hulk', 'Hawkeye', 'Ant-Man', 'Wasp', 'Quicksilver', 
-            'Scarlet Witch', 'Groot', 'Rocket', 'Star-Lord' ,'Gamora', 'Drax', 
-            'Venom', 'Spectrum', 'Nebula', 'War Machine', 
-            'Valkyrie', 'Vision', 'Ghost Spider', 'Spider-Miles', 'Nova', 
-            'Ironheart', 'Spider-Ham', 'SP//dr', 'Colossus', 'Shadowcat', 'Cyclops', 
-            'Phoenix', 'Wolverine', 'Storm', 'Gambit', 'Rogue', 'Cable', 'Domino', 
-            'Angel', 'Psylocke', 'X-23', 'Deadpool', 'Bishop', 'Magik', 'Iceman'
+            'Black Panther',  
+            'Colossus', 
+            'Deadpool', 'Doctor Strange', 'Drax', 
+            'Gambit', 'Gamora', 'Groot', 'Hawkeye', 
+            'Hulk', 'Ironheart', 'Jubilee', 
+            'Ms Marvel', 'Nebula', 'Nova', 'Phoenix', 
+            'Quicksilver', 'Rogue',  
+            'Shadowcat', 'She-Hulk', 'Spectrum', 'Spider-Ham', 
+            'Spider-Man (Miles Morales)', 'Star-Lord', 'Thor', 
+            'Valkyrie', 'Venom', 'Vision', 'War Machine', 'Wasp', 
+            'Wolverine'
         ];
 
+        // Draft-bot order based on forsooth's sims: https://www.marvelsimulator.com/stats
+        const draftOrder = [
+            'Doctor Strange', 'Storm', 'Captain America', 'Ironheart', 'Bishop', 
+            'Spider-Man (Miles Morales)', 'Cyclops', 'Spider-Ham', 'Vision', 'Wolverine', 
+            'Captain Marvel', 'Psylocke', 'Gambit', 'Spectrum', 'Iron Man', 
+            'Scarlet Witch', 'X-23', 'Black Widow', 'Venom', 'Spider-Man', 
+            'Angel', 'Phoenix', 'Black Panther', 'Iceman', 'SP//dr', 
+            'Colossus', 'Adam Warlock', 'War Machine', 'Ant-Man', 'Quicksilver', 
+            'Gamora', 'Rogue', 'Rocket Raccoon', 'Nebula', 'Spider-Woman', 
+            'She-Hulk', 'Cable', 'Magik', 'Hawkeye', 'Groot', 
+            'Domino', 'Wasp', 'Shadowcat', 'Ghost-Spider', 'Ms Marvel', 
+            'Nova', 'Jubilee',
+            'Star-Lord', 'Deadpool', 'Drax', 'Thor', 
+            'Hulk', 'Valkyrie'
+        ];
+ 
         // List of aspect choices
         const aspectChoices = ['Aggression', 'Justice', 'Leadership', 'Protection', 'Pool'];
 
         // List of teams
         const teams = [
-            "MrSelfDestruct and em", "Teberle and Kamehameha", "TordekRPG - 2-handed", 
-            "tjjj and jarratt", "Astrodar and josseroo", "Dristin - 2-handed", 
-            "Kakita Jamie and The Ugly Knight", "Lexicon - 2-handed",
-            "PackAttackCB and captainmarvel9", "Dr00"
+            "Maddox", "Jacinto", "Bri-Die", "shaneform", "soamazinglybad", "The_Chase and sl0th"
         ];
 
         // Count the number of teams
@@ -128,11 +159,8 @@
             // Sort the selected heroes alphabetically
             selectedHeroes.sort();
 
-            // Combine selectedHeroes and selectedAspects to create draftBot
-            let draftBot = selectedHeroes.concat(selectedAspects, aspectDuplicates);
-
-            // Shuffle the draftBot list
-            shuffleArray(draftBot, randomFunc);
+            // Updated draft bot
+            let draftBot = draftOrder.filter(hero => selectedHeroes.includes(hero));
 
             // Shuffle the teams list
             const shuffledTeams = [...teams];
@@ -144,3 +172,5 @@
     </script>
 </body>
 </html>
+
+
